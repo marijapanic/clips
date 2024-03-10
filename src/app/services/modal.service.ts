@@ -1,27 +1,44 @@
 import { Injectable, OnInit } from '@angular/core';
 
+interface IModal
+{
+  id: string;
+  visible: boolean;
+}
 @Injectable({
   providedIn: 'root'
 })
-export class ModalService implements OnInit {
-  private visible = false;
-
+export class ModalService {
+  private modals: IModal[] = [];
   constructor()
   {
 
   }
 
-  isModalOpen()
+  isModalOpen(id: string)
   {
-    return this.visible;
+    return Boolean(this.modals.find(modal => modal.id == id)?.visible)
   }
 
-  toggleModal()
+  toggleModal(id: string)
   {
-    this.visible = !this.visible;
+    const modal = this.modals.find(modal => modal.id == id);
+    if (modal)
+    {
+      modal.visible = !modal.visible;
+    }
   }
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+  register(id: string)
+  {
+    this.modals.push({
+      id,
+      visible: false
+    })
+  }
+
+  unregister(id: string)
+  {
+    this.modals = this.modals.filter(modal => modal.id != id);
   }
 }
